@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "mediflow-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "frontend",
+      "port": 5173,
+      "env": {
+        "VITE_API_TARGET": "http://127.0.0.1:3000"
+      }
+    }
+  ]
+}

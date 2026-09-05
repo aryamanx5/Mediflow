@@ -1,0 +1,425 @@
+@import "tailwindcss";
+@import "./styles/auth.css";
+
+/* ==========================================================================
+   MediFlow design system
+   One language, two registers:
+   - Landing  : editorial, cinematic, generous negative space
+   - Dashboard: dense, operational, high legibility
+   Palette carried forward from the original stylesheet so the product keeps
+   its identity: warm paper, deep ink, muted sage, clay accent.
+   ========================================================================== */
+
+@theme {
+  /* --- surface & ink --- */
+  --color-ink: #16160f;
+  --color-ink-soft: #3a3a31;
+  --color-muted: #7d7869;
+  --color-faint: #a5a091;
+  --color-paper: #f6f4ef;
+  --color-paper-warm: #efece4;
+  --color-panel: #ffffff;
+  --color-line: #e3dfd5;
+  --color-line-soft: #eeebe3;
+
+  /* --- brand --- */
+  --color-sage: #4f6152;
+  --color-sage-deep: #35443a;
+  --color-sage-tint: #e4e9e1;
+  --color-clay: #9c6b4f;
+  --color-clay-tint: #f0e5dd;
+
+  /* --- status (restrained, not neon) --- */
+  --color-ok: #4f6152;
+  --color-ok-tint: #e4e9e1;
+  --color-warn: #8a6321;
+  --color-warn-tint: #f4ebda;
+  --color-danger: #a3402f;
+  --color-danger-tint: #f5e3df;
+  --color-info: #3f5a6b;
+  --color-info-tint: #e2eaee;
+
+  /* --- type --- */
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* --- motion --- */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+  --nav-h: 4.25rem;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis-weight: none;
+}
+
+/* Numeric columns must not dance while data loads. */
+table, .tabular { font-variant-numeric: tabular-nums; }
+
+::selection { background: var(--color-sage); color: var(--color-paper); }
+
+/* Visible, branded focus. Never removed — only shaped. */
+:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Dashboard chrome
+   The operational screens sit behind a fixed photograph of the room the work
+   happens in — see components/PageBackdrop.tsx, which also carries the paper
+   wash and the sage/clay washes that keep it on-palette. All this rule owes
+   the shell is a ground to hold while that image decodes.
+   ========================================================================== */
+
+.app-shell { background-color: var(--color-paper); }
+
+/* --------------------------------------------------------------------------
+   Translucent surfaces
+   The dashboard is composed OVER a photograph of a real room, not printed on
+   top of one. Two failures are being avoided here, and they pull in opposite
+   directions:
+
+     1. Opaque/heavily-fogged panels erase the room.
+     2. Panels thin enough to show the room leave black type sitting on top of
+        dark silhouettes, where it cannot be read at all.
+
+   The way out is not more white fill — white fill is what erases the room.
+   It is TONE CONTROL, applied locally by the panel's own backdrop-filter:
+
+       blur      short (6–12px) — a pane of glass, not a frosted wall
+       saturate  slightly down  — takes the colour pollution off the type
+       contrast  well down      — compresses the photo's darks upward so ink
+                                  type always has a light ground, while the
+                                  shapes, edges and depth all survive
+       brightness slightly up   — lands that compressed range in the light half
+
+   The result reads as glass: through a panel you still see counters, signage,
+   people and architecture, just lighter and softer. OUTSIDE a panel the
+   photograph is untouched and completely crisp — and that contrast between
+   the two is what makes the UI look like it is floating on the room rather
+   than replacing it. Which is also why the page layout keeps real gutters:
+   glass only reads as glass if there is un-glassed room around it.
+
+   Tiers carry different weight on purpose; one flat value everywhere gives a
+   page with no hierarchy.
+   -------------------------------------------------------------------------- */
+
+.surface {
+  background-color: rgb(255 255 255 / var(--surface-fill, 0.12));
+  backdrop-filter:
+    blur(var(--surface-blur, 10px))
+    saturate(var(--surface-sat, 0.85))
+    contrast(var(--surface-contrast, 0.5))
+    brightness(var(--surface-bright, 1.3));
+  -webkit-backdrop-filter:
+    blur(var(--surface-blur, 10px))
+    saturate(var(--surface-sat, 0.85))
+    contrast(var(--surface-contrast, 0.5))
+    brightness(var(--surface-bright, 1.3));
+  border: 1px solid rgb(255 255 255 / var(--surface-edge, 0.5));
+  box-shadow: 0 2px 8px -4px rgb(22 22 15 / 0.14);
+}
+
+/* Navigation earns more weight than content: it is persistent, it is small
+   text, and it anchors the left edge of every screen. */
+.surface-nav { --surface-fill: 0.16; --surface-blur: 12px; --surface-edge: 0.55; --surface-contrast: 0.45; }
+
+/* Major content containers — dashboard cards, the page header. */
+.surface-panel { --surface-fill: 0.12; --surface-blur: 10px; }
+
+/* Tables sit lightest of all. They are the largest area on the page, so they
+   are where an over-heavy fill does the most damage to the photograph — and
+   also where the most small type needs a dependable ground, so they lean
+   hardest on tone compression instead. */
+.surface-table { --surface-fill: 0.1; --surface-blur: 8px; --surface-edge: 0.45; --surface-contrast: 0.42; --surface-bright: 1.34; }
+
+/* Inputs and secondary controls. These are small, they are the only thing on
+   the page that has to look empty and still look like a control, and their
+   one piece of text is a placeholder — so this is the one translucent tier
+   that leans on fill and edge rather than on tone alone. */
+.surface-control { --surface-fill: 0.22; --surface-blur: 8px; --surface-edge: 0.7; --surface-contrast: 0.45; --surface-bright: 1.3; }
+
+/* A placeholder at the faint tier disappears over a photograph. The class
+   sets the colour on the pseudo-element directly, so the shell's grey
+   re-mapping above cannot reach it. */
+.app-shell :is(input, textarea)::placeholder { color: var(--color-muted); opacity: 1; }
+
+/* --- how much tone correction each room needs ------------------------------
+   The four photographs are not interchangeable. The stockroom and the
+   dispatch bay carry deep navy bins, a dark van and figures in shadow, and
+   ink type laid over those needs real compression to stay readable. The
+   corridor behind the overview is the opposite: a pale, high-key frame with
+   almost no darks in it, and compressing that only bleaches the little
+   detail it has. So the correction is set per room rather than globally —
+   the panels stay the same thickness everywhere, they just work the
+   photograph underneath them by as much as that photograph demands.
+
+   The layout sets data-room on the shell (see AppLayout). */
+.app-shell[data-room="dashboard"] .surface { --surface-contrast: 0.82; --surface-bright: 1.03; }
+.app-shell[data-room="customers"] .surface { --surface-contrast: 0.5; --surface-bright: 1.3; }
+.app-shell[data-room="products"] .surface,
+.app-shell[data-room="orders"] .surface { --surface-contrast: 0.45; --surface-bright: 1.32; }
+
+/* The overlay is opaque; it must not inherit any of the above. */
+.app-shell .surface-overlay { --surface-contrast: 1; --surface-bright: 1; }
+
+/* Table structure. The local backdrop under a panel is now a LIGHT field, so
+   the row rules are hairlines of ink rather than of white — a white divider
+   on a light ground is simply invisible, and scannability is the one thing a
+   table cannot trade away. They stay faint enough to read as a rule and not
+   as a drawn box. */
+.surface-table thead th {
+  border-bottom-color: rgb(22 22 15 / 0.18);
+  background-color: rgb(255 255 255 / 0.12);
+}
+.surface-table tbody tr { border-bottom-color: rgb(22 22 15 / 0.08); }
+.surface-divide > * + * { border-top-color: rgb(22 22 15 / 0.08); }
+.surface-row-hover:hover { background-color: rgb(255 255 255 / 0.3); }
+
+/* Hairline dividers inside panels — headers, footers, sidebar sections. The
+   paper-coloured `border-line-*` tokens are opaque, and an opaque rule laid
+   across a translucent panel reads as a stripe of paint on the photograph. */
+.app-shell :is(.border-line, .border-line-soft) { border-color: rgb(22 22 15 / 0.1); }
+
+/* Hover fills, likewise: `bg-paper-warm` is opaque paper. Inside the shell a
+   hover should brighten the glass, not patch over it. */
+.app-shell .hover\:bg-paper-warm:hover { background-color: rgb(255 255 255 / 0.3); }
+
+/* Overlays are the deliberate exception. They are transient, they already
+   darken the page behind them, and they carry form fields — an input with
+   nothing but a 12% surface under it cannot be filled in with any confidence.
+   Critical form controls stay solid; that contrast is the hierarchy. */
+.surface-overlay {
+  background-color: rgb(255 255 255 / 0.96);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  border-color: rgb(255 255 255 / 0.7);
+  box-shadow: 0 18px 50px -22px rgb(22 22 15 / 0.4);
+}
+.surface-overlay :is(.border-line, .border-line-soft) { border-color: var(--color-line); }
+
+/* No backdrop-filter means no tone control, and without tone control a thin
+   fill is unreadable — fall back to something real rather than leaving type
+   stranded on a photograph. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .surface { background-color: rgb(255 255 255 / 0.9); }
+  .surface-table thead th { background-color: transparent; }
+}
+
+/* --------------------------------------------------------------------------
+   Type over a photograph
+   With the tone compressed locally, type can simply be type: sharp, dark and
+   unhaloed. The previous system ringed every glyph in three paper shadows to
+   fight the raw photo; over this much small text that halo is what made the
+   dashboard look foggy, so it is gone. Body copy still runs a weight heavier
+   than it would on paper, and the muted greys move up a tier — over even a
+   softened photograph a light grey stops reading as "quiet" and starts
+   reading as "gone".
+   -------------------------------------------------------------------------- */
+
+.app-shell { font-weight: 500; color: var(--color-ink); }
+.app-shell .u-meta { font-weight: 500; color: var(--color-ink-soft); }
+.app-shell .u-label { font-weight: 600; color: var(--color-ink-soft); }
+
+/* Table cells carry the most detail behind them and the least ink of their
+   own, so both tiers go up a step and the mono columns — IDs, SKUs, order
+   numbers — take full ink rather than the softer grey they use on paper. */
+.surface-table td { font-weight: 600; }
+.surface-table td .u-meta { font-weight: 500; }
+.app-shell .font-mono { font-weight: 600; color: var(--color-ink); }
+
+/* The muted tiers exist to be quiet on paper. Over a photograph they stop
+   being quiet and start being illegible, so inside the shell each one steps
+   up: muted becomes ink-soft, faint becomes muted. Hierarchy survives —
+   weight, size and position still separate the tiers — but nothing on a
+   dashboard screen is left at a contrast the room behind it can win. */
+.app-shell .text-muted { color: var(--color-ink-soft); }
+.app-shell .text-faint { color: var(--color-muted); }
+
+/* Inside an overlay there is a real opaque surface, so the greys can go back
+   to being greys. */
+.surface-overlay .text-muted, .surface-overlay .u-meta { color: var(--color-muted); }
+.surface-overlay .text-faint { color: var(--color-faint); }
+
+/* ==========================================================================
+   Typography scale
+   ========================================================================== */
+
+.u-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.u-serif { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.015em; }
+
+.u-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-sage);
+}
+
+.u-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.u-meta { font-size: 0.78rem; color: var(--color-muted); }
+
+/* An italic serif emphasis used sparingly in headlines. */
+.u-display em, .u-serif em { font-style: italic; font-weight: 400; }
+
+/* ==========================================================================
+   Motion primitives
+   Every animation below is opt-in via class and disabled under
+   prefers-reduced-motion. Nothing animates implicitly.
+   ========================================================================== */
+
+@keyframes mf-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes mf-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mf-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes mf-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes mf-spin { to { transform: rotate(360deg); } }
+/* Ambient background wash — a slow, wide drift, not a bounce. */
+@keyframes mf-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(2.5%, -3%, 0) scale(1.05); }
+}
+/* Small decorative chips bobbing near the hero figure. */
+@keyframes mf-float-soft {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -9px, 0); }
+}
+/* An ECG trace drawing itself in, then holding. --pulse-length must be set
+   per-use to (at least) the path's own length, in the same units as its
+   viewBox — see AmbientBackdrop.tsx. */
+@keyframes mf-pulse-draw {
+  from { stroke-dashoffset: var(--pulse-length, 240); }
+  to   { stroke-dashoffset: 0; }
+}
+/* An IV drip falling, stretching as it goes and bursting at the bottom. */
+@keyframes mf-drop {
+  0%   { transform: translateY(0) scaleY(0.7); opacity: 0; }
+  12%  { opacity: 1; }
+  78%  { transform: translateY(88px) scaleY(1.25); opacity: 1; }
+  92%  { transform: translateY(96px) scaleY(0.4); opacity: 0; }
+  100% { opacity: 0; }
+}
+/* Scroll cue, breathing rather than blinking. */
+@keyframes mf-breathe {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+/* The six mismatched records, each never quite settling. --tilt sets each
+   one's resting angle so they don't all jitter around the same axis. */
+@keyframes mf-jitter {
+  0%, 100% { transform: rotate(var(--tilt, 0deg)) translate3d(0, 0, 0); }
+  25%      { transform: rotate(calc(var(--tilt, 0deg) + 0.9deg)) translate3d(1.5px, -2px, 0); }
+  60%      { transform: rotate(calc(var(--tilt, 0deg) - 1.1deg)) translate3d(-2px, 1px, 0); }
+}
+/* The dispensary shelf tracking past behind the inventory panel. Three
+   identical runs sit side by side, so a third of the way is a seamless loop. */
+@keyframes mf-shelf {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+@keyframes mf-underline {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.a-rise { animation: mf-rise 0.75s var(--ease-out-quint) both; }
+.a-fade { animation: mf-fade 0.6s ease both; }
+.a-spin { animation: mf-spin 0.7s linear infinite; }
+.a-drift { animation: mf-drift 16s ease-in-out infinite; }
+.a-float { animation: mf-float-soft 6s ease-in-out infinite; }
+.a-breathe { animation: mf-breathe 3s ease-in-out infinite; }
+.a-pulse-draw {
+  stroke-dasharray: var(--pulse-length, 240);
+  animation: mf-pulse-draw 2.6s var(--ease-out-quint) 1 both;
+}
+
+/* Scroll-reveal: set by useReveal(). Transition, not animation, so an element
+   that starts in view can be shown instantly without a flash. */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 0.8s var(--ease-out-quint), transform 0.8s var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-line-soft) 0%,
+    var(--color-paper-warm) 40%,
+    var(--color-line-soft) 80%
+  );
+  background-size: 200% 100%;
+  animation: mf-shimmer 1.4s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.95em;
+  margin-left: 3px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: mf-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   Scrollbar — thin and unobtrusive, matching the paper ground
+   ========================================================================== */
+
+* { scrollbar-width: thin; scrollbar-color: var(--color-line) transparent; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-faint); }
