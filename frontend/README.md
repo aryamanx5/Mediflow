@@ -1,12 +1,12 @@
 # MediFlow — frontend
 
 React 19 + TypeScript + Vite + Tailwind v4. This is the **frontend only**. The
-Express/MongoDB service in `../mediversal-backend` is a separate, unmodified
+Express/MongoDB service in `../mediflow-backend` is a separate, unmodified
 application and remains the source of truth for all data.
 
 ## Running
 
-The backend must be running first (from `../mediversal-backend`):
+The backend must be running first (from `../mediflow-backend`):
 
 ```bash
 npm start

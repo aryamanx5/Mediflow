@@ -1,6 +1,6 @@
 /**
  * Endpoint bindings. One function per existing backend route — nothing more.
- * Route inventory verified against mediversal-backend/src/routes/*.js
+ * Route inventory verified against mediflow-backend/src/routes/*.js
  */
 import { request, query } from "./client";
 import type {

@@ -1,6 +1,6 @@
 /**
  * Types mirroring the existing Mongoose schemas exactly.
- * Source of truth: mediversal-backend/src/models/*.js
+ * Source of truth: mediflow-backend/src/models/*.js
  * Do not add fields the backend does not return.
  */
 

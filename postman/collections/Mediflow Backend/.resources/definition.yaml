@@ -1,5 +1,5 @@
 $kind: collection
-name: 'Mediversal Backend'
+name: 'Mediflow Backend'
 variables:
   - key: 'baseUrl'
     value: 'http://localhost:3000'

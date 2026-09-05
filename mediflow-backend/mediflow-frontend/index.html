@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediFlow — Inventory, quietly under control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- Tailwind is loaded only so the DoctorFollower widget's utility classes
+     work without a build step. It does not affect the rest of the site,
+     which is plain hand-written CSS in style.css. -->
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<section id="authScreen" class="auth-screen">
+  <div class="auth-panel">
+    <div class="brand-mark">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+        <rect x="4" y="15" width="26" height="10" rx="5" transform="rotate(-35 17 20)" stroke="currentColor" stroke-width="1.4"/>
+        <line x1="12.5" y1="21.5" x2="18" y2="16" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <p class="eyebrow">MediFlow</p>
+    <h1 class="auth-title">Inventory, <em>quietly</em><br>under control.</h1>
+
+    <div class="auth-toggle">
+      <button class="toggle-btn active" data-form="login">Sign in</button>
+      <button class="toggle-btn" data-form="register">Create account</button>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+      <label class="field"><span>Email</span><input type="email" id="loginEmail" required autocomplete="email"></label>
+      <label class="field"><span>Password</span><input type="password" id="loginPassword" required autocomplete="current-password"></label>
+      <button type="submit" class="btn-primary full">Sign in</button>
+    </form>
+
+    <form id="registerForm" class="auth-form hidden">
+      <label class="field"><span>Full name</span><input type="text" id="regName" required></label>
+      <label class="field"><span>Email</span><input type="email" id="regEmail" required></label>
+      <label class="field"><span>Password</span><input type="password" id="regPassword" required></label>
+      <label class="field"><span>Role</span>
+        <select id="regRole"><option value="User">User</option><option value="Admin">Admin</option></select>
+      </label>
+      <button type="submit" class="btn-primary full">Create account</button>
+    </form>
+
+    <p id="authMsg" class="auth-msg"></p>
+  </div>
+  <div class="auth-visual">
+    <div class="doctor-mount-point doctor-mount"></div>
+  </div>
+</section>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="appShell" class="app-shell hidden">
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <button id="logoHome" class="brand-mark small stacked" aria-label="Go to overview">
+      <span>Medi</span><span class="brand-second">Flow</span>
+      <em class="brand-tag">inventory, quietly</em>
+    </button>
+
+    <div class="nav-desktop">
+      <button id="menuBtn" class="menu-pill">Menu</button>
+    </div>
+
+    <button id="hamburgerBtn" class="hamburger" aria-label="Menu">
+      <span class="bar bar1"></span><span class="bar bar2"></span><span class="bar bar3"></span>
+    </button>
+  </header>
+
+  <!-- MOBILE / MENU OVERLAY -->
+  <div id="menuOverlay" class="menu-overlay">
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="menu-panel">
+      <nav class="menu-links">
+        <button class="menu-link" data-tab="overview">Overview</button>
+        <button class="menu-link" data-tab="products">Products</button>
+        <button class="menu-link" data-tab="customers">Customers</button>
+        <button class="menu-link" data-tab="orders">Orders</button>
+      </nav>
+      <div class="menu-bottom">
+        <button id="logoutBtn" class="btn-primary full">Sign out</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="content">
+
+    <!-- ===================== OVERVIEW ===================== -->
+    <section id="overviewTab" class="tab">
+
+      <!-- HERO -->
+      <div class="hero-block" id="heroSection">
+        <div class="feature-bar mosaic-card" id="stat0">
+          <span class="stat-num" id="statProducts">–</span><span class="stat-label">Products tracked</span>
+        </div>
+        <div class="feature-bar mosaic-card" id="stat1">
+          <span class="stat-num" id="statCustomers">–</span><span class="stat-label">Customers on file</span>
+        </div>
+        <div class="feature-bar mosaic-card" id="stat2">
+          <span class="stat-num" id="statOrders">–</span><span class="stat-label">Orders placed</span>
+        </div>
+
+        <div class="hero-main mosaic-card" id="heroMain">
+          <p class="hero-topline">Every capsule, tablet and consult<br>tracked in one place.</p>
+          <div class="hero-bottom-left">
+            <span class="hero-eyebrow">Built for your pharmacy</span>
+            <h1 class="hero-title">Medi<br>Flow</h1>
+          </div>
+          <span class="hero-bottom-right">Stock, orders, customers — always current</span>
+          <div class="doctor-mount-point hero-doctor" id="doctorRootHero"></div>
+        </div>
+      </div>
+
+      <!-- STATS GRID -->
+      <div class="grid-block" id="gallerySection">
+        <button class="g-card g0 g-card-btn" id="g0Card">
+          <h3 class="g-heading">Stock Room</h3>
+          <p class="g-sub" id="stockUnitsSub">Loading…</p>
+        </button>
+        <div class="g-card g1 mosaic-card">
+          <p class="g-text">Running low on something?<br>Check the catalogue before you reorder.</p>
+          <button class="cta-pill" id="viewProductsBtn">View products</button>
+        </div>
+        <button class="g-card g2 g-card-btn" id="g2Card">
+          <h3 class="g-heading">Directory</h3>
+          <p class="g-sub" id="directorySub">Loading…</p>
+        </button>
+        <div class="g-card g3">
+          <div class="nav-tiles">
+            <button class="nav-tile active" data-tab="products"><h4>Products</h4><span class="tile-num">01</span></button>
+            <button class="nav-tile" data-tab="customers"><h4>Customers</h4><span class="tile-num">02</span></button>
+            <button class="nav-tile" data-tab="orders"><h4>Orders</h4><span class="tile-num">03</span></button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================== PRODUCTS ===================== -->
+    <section id="productsTab" class="tab hidden">
+      <header class="section-head">
+        <p class="eyebrow">Catalogue</p>
+        <h2>Products</h2>
+        <button class="btn-primary" id="openProductForm">Add product</button>
+      </header>
+      <div class="toolbar"><input type="text" id="productSearch" placeholder="Search products..." class="search-input"></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>Name</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr></thead><tbody id="productsBody"></tbody></table>
+        <div id="productsEmpty" class="empty-state hidden"><p>No products yet.</p></div>
+      </div>
+      <div class="pagination" id="productsPagination"></div>
+    </section>
+
+    <!-- ===================== CUSTOMERS ===================== -->
+    <section id="customersTab" class="tab hidden">
+      <header class="section-head">
+        <p class="eyebrow">Directory</p>
+        <h2>Customers</h2>
+        <button class="btn-primary" id="openCustomerForm">Add customer</button>
+      </header>
+      <div class="toolbar"><input type="text" id="customerSearch" placeholder="Search customers..." class="search-input"></div>
+      <div class="table-wrap">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>City</th><th></th></tr></thead><tbody id="customersBody"></tbody></table>
+        <div id="customersEmpty" class="empty-state hidden"><p>No customers yet.</p></div>
+      </div>
+      <div class="pagination" id="customersPagination"></div>
+    </section>
+
+    <!-- ===================== ORDERS ===================== -->
+    <section id="ordersTab" class="tab hidden">
+      <header class="section-head">
+        <p class="eyebrow">Fulfilment</p>
+        <h2>Orders</h2>
+        <button class="btn-primary" id="openOrderForm">New order</button>
+      </header>
+      <div class="table-wrap">
+        <table><thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody id="ordersBody"></tbody></table>
+        <div id="ordersEmpty" class="empty-state hidden"><p>No orders placed yet.</p></div>
+      </div>
+      <div class="pagination" id="ordersPagination"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== MODAL: Add Product ===================== -->
+<div class="modal-overlay hidden" id="productModal">
+  <div class="modal">
+    <div class="modal-head"><h3>New product</h3><button class="modal-close" data-close="productModal">&times;</button></div>
+    <form id="productForm" class="modal-form">
+      <label class="field"><span>Name</span><input type="text" id="p_productName" required></label>
+      <label class="field"><span>SKU</span><input type="text" id="p_sku" required></label>
+      <label class="field"><span>Category</span><input type="text" id="p_category" required></label>
+      <label class="field"><span>Brand</span><input type="text" id="p_brand" required></label>
+      <label class="field"><span>Supplier</span><input type="text" id="p_supplier" required></label>
+      <div class="field-row">
+        <label class="field"><span>Cost price</span><input type="number" id="p_costPrice" required></label>
+        <label class="field"><span>Selling price</span><input type="number" id="p_sellingPrice" required></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>Stock qty</span><input type="number" id="p_stockQuantity" required></label>
+        <label class="field"><span>Minimum stock</span><input type="number" id="p_minimumStock" required></label>
+      </div>
+      <label class="field"><span>Unit</span><input type="text" id="p_unit" placeholder="pcs, box, strip..." required></label>
+      <button type="submit" class="btn-primary full">Add product</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: Add Customer ===================== -->
+<div class="modal-overlay hidden" id="customerModal">
+  <div class="modal">
+    <div class="modal-head"><h3>New customer</h3><button class="modal-close" data-close="customerModal">&times;</button></div>
+    <form id="customerForm" class="modal-form">
+      <div class="field-row">
+        <label class="field"><span>Customer ID</span><input type="text" id="c_customerId" required></label>
+        <label class="field"><span>Name</span><input type="text" id="c_customerName" required></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>Age</span><input type="number" id="c_age" required></label>
+        <label class="field"><span>Gender</span>
+          <select id="c_gender" required><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>Phone</span><input type="text" id="c_phone" required></label>
+        <label class="field"><span>Email</span><input type="email" id="c_email" required></label>
+      </div>
+      <label class="field"><span>Address line 1</span><input type="text" id="c_addressLine1" required></label>
+      <div class="field-row">
+        <label class="field"><span>City</span><input type="text" id="c_city" required></label>
+        <label class="field"><span>State</span><input type="text" id="c_state" required></label>
+      </div>
+      <label class="field"><span>Pin code</span><input type="text" id="c_pinCode" required></label>
+      <button type="submit" class="btn-primary full">Add customer</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL: New Order ===================== -->
+<div class="modal-overlay hidden" id="orderModal">
+  <div class="modal">
+    <div class="modal-head"><h3>New order</h3><button class="modal-close" data-close="orderModal">&times;</button></div>
+    <div class="modal-form">
+      <label class="field"><span>Customer</span><select id="o_customer"></select></label>
+      <div id="orderItems" class="order-items"></div>
+      <button type="button" id="addItemBtn" class="btn-ghost">+ Add item</button>
+      <div class="field-row">
+        <label class="field"><span>Payment method</span>
+          <select id="o_paymentMethod"><option>Cash</option><option>UPI</option><option>Card</option><option>Net Banking</option></select>
+        </label>
+        <label class="field"><span>Discount</span><input type="number" id="o_discount" value="0"></label>
+      </div>
+      <label class="field"><span>Shipping charge</span><input type="number" id="o_shipping" value="0"></label>
+      <button type="button" id="createOrderBtn" class="btn-primary full">Place order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DRAWER: Order Detail ===================== -->
+<div class="drawer-overlay hidden" id="orderDrawer">
+  <div class="drawer">
+    <div class="modal-head"><h3>Order detail</h3><button class="modal-close" data-close="orderDrawer">&times;</button></div>
+    <div id="orderDrawerBody" class="drawer-body"></div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="doctor-widget.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

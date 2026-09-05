@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Coverage
+coverage/
+
+# Build files
+dist/
+build/

@@ -1,0 +1,10 @@
+services:
+  backend:
+    build: .
+    container_name: mediflow-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: npm start
+    
