@@ -25,7 +25,7 @@ const SECTION_BACKDROP: Record<string, BackdropName> = {
 };
 
 export function AppLayout() {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout } = useAuth();
   const token = localStorage.getItem("mediflow.token");
   const isDemo = token ? JSON.parse(atob(token.split(".")[1])).isDemo : false;
   const navigate = useNavigate();
