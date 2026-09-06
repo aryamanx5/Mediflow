@@ -7,9 +7,18 @@
       "runtimeArgs": ["run", "dev"],
       "cwd": "frontend",
       "port": 5173,
+      "autoPort": true,
       "env": {
         "VITE_API_TARGET": "http://127.0.0.1:3000"
       }
+    },
+    {
+      "name": "mediflow-frontend-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "preview", "--port", "4173", "--strictPort"],
+      "cwd": "frontend",
+      "port": 4173,
+      "autoPort": false
     }
   ]
 }
