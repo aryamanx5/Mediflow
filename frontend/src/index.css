@@ -129,7 +129,7 @@ table, .tabular { font-variant-numeric: tabular-nums; }
 .app-shell { --room-contrast: 0.56; --room-bright: 1.2; }
 
 .surface {
-  background-color: rgb(255 255 255 / var(--surface-fill, 0.16));
+  background-color: rgb(255 255 255 / var(--surface-fill, 0.18));
   backdrop-filter:
     saturate(var(--surface-sat, 0.85))
     contrast(var(--surface-contrast, var(--room-contrast)))
@@ -145,20 +145,20 @@ table, .tabular { font-variant-numeric: tabular-nums; }
 /* Sidebar: persistent, small text, anchors the left edge over the busiest
    vertical strip of every photo — a moderate-strong scrim, still translucent,
    never a white block. */
-.surface-nav { --surface-fill: 0.34; --surface-edge: 0.52; }
+.surface-nav { --surface-fill: 0.38; --surface-edge: 0.52; }
 
 /* Content cards and the page-header band. */
-.surface-panel { --surface-fill: 0.17; }
+.surface-panel { --surface-fill: 0.19; }
 
 /* The page-title band. It carries the single strongest text element on the
    page and often sits over the brightest, busiest part of the frame, so it
    also gets a faint top-weighted gradient scrim on top of the flat fill. */
 .surface-title {
-  --surface-fill: 0.19;
+  --surface-fill: 0.215;
   background-image: linear-gradient(
     to bottom,
-    rgb(255 255 255 / 0.14),
-    rgb(255 255 255 / 0.03)
+    rgb(255 255 255 / 0.16),
+    rgb(255 255 255 / 0.035)
   );
 }
 
@@ -168,7 +168,7 @@ table, .tabular { font-variant-numeric: tabular-nums; }
    tone correction. It is still translucent: the shelves, cold-store and
    signage all read through it. */
 .surface-table {
-  --surface-fill: 0.22;
+  --surface-fill: 0.25;
   --surface-edge: 0.4;
   --surface-contrast: calc(var(--room-contrast) - 0.1);
   --surface-bright: calc(var(--room-bright) + 0.04);
@@ -181,7 +181,7 @@ table, .tabular { font-variant-numeric: tabular-nums; }
    ceiling as well as over dark shelving, and a white border vanishes on the
    former. */
 .surface-control {
-  --surface-fill: 0.66;
+  --surface-fill: 0.73;
   --surface-edge: 0.55;
   --surface-contrast: 1;
   --surface-bright: 1;
@@ -198,7 +198,7 @@ table, .tabular { font-variant-numeric: tabular-nums; }
 /* The active nav item is allowed an obviously stronger scrim — a selected
    state has to be unmistakable, and it is a small target. */
 .nav-active {
-  background-color: rgb(255 255 255 / 0.26);
+  background-color: rgb(255 255 255 / 0.29);
   box-shadow: inset 2px 0 0 var(--color-sage);
 }
 
@@ -237,13 +237,13 @@ table, .tabular { font-variant-numeric: tabular-nums; }
    scannability is the one thing a table cannot trade away. */
 .surface-table thead th {
   border-bottom-color: rgb(22 22 15 / 0.22);
-  background-color: rgb(255 255 255 / 0.24);
+  background-color: rgb(255 255 255 / 0.27);
   color: var(--color-ink-strong);
 }
 .surface-table tbody tr { border-bottom-color: rgb(22 22 15 / 0.09); }
-.surface-table tbody tr:nth-child(even) { background-color: rgb(255 255 255 / 0.06); }
+.surface-table tbody tr:nth-child(even) { background-color: rgb(255 255 255 / 0.07); }
 .surface-divide > * + * { border-top-color: rgb(22 22 15 / 0.08); }
-.surface-row-hover:hover { background-color: rgb(255 255 255 / 0.2); }
+.surface-row-hover:hover { background-color: rgb(255 255 255 / 0.22); }
 
 /* Small screens have almost none of the un-glassed gutter that lets a light
    panel read as glass, and a phone is often used one-handed in worse light —
@@ -255,10 +255,10 @@ table, .tabular { font-variant-numeric: tabular-nums; }
   .app-shell[data-room="customers"] { --room-contrast: 0.6; --room-bright: 1.18; }
   .app-shell[data-room="products"] { --room-contrast: 0.52; --room-bright: 1.22; }
   .app-shell[data-room="orders"] { --room-contrast: 0.46; --room-bright: 1.26; }
-  .surface-nav { --surface-fill: 0.4; }
-  .surface-panel { --surface-fill: 0.22; }
-  .surface-title { --surface-fill: 0.24; }
-  .surface-table { --surface-fill: 0.28; }
+  .surface-nav { --surface-fill: 0.45; }
+  .surface-panel { --surface-fill: 0.25; }
+  .surface-title { --surface-fill: 0.27; }
+  .surface-table { --surface-fill: 0.32; }
 }
 
 /* Hairline dividers inside panels — headers, footers, sidebar sections. The
