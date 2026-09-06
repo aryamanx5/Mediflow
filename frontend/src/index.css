@@ -130,11 +130,12 @@ table, .tabular { font-variant-numeric: tabular-nums; }
 
 .surface {
   background-color: rgb(255 255 255 / var(--surface-fill, 0.18));
+  /* Standard property only — the build's autoprefixer (Lightning CSS, via the
+     Tailwind v4 plugin) emits the -webkit- form. Writing both by hand made
+     Lightning CSS de-dupe the pair and keep ONLY -webkit-backdrop-filter,
+     which current Chrome does not honour, so the whole tone correction was
+     silently dropped in the production build while dev kept both. */
   backdrop-filter:
-    saturate(var(--surface-sat, 0.85))
-    contrast(var(--surface-contrast, var(--room-contrast)))
-    brightness(var(--surface-bright, var(--room-bright)));
-  -webkit-backdrop-filter:
     saturate(var(--surface-sat, 0.85))
     contrast(var(--surface-contrast, var(--room-contrast)))
     brightness(var(--surface-bright, var(--room-bright)));
@@ -209,7 +210,6 @@ table, .tabular { font-variant-numeric: tabular-nums; }
   background-color: rgb(244 235 218 / 0.78);
   border-bottom: 1px solid rgb(138 99 33 / 0.28);
   backdrop-filter: saturate(0.9) contrast(0.7) brightness(1.1);
-  -webkit-backdrop-filter: saturate(0.9) contrast(0.7) brightness(1.1);
 }
 .demo-banner a { color: var(--color-warn); }
 
@@ -277,7 +277,6 @@ table, .tabular { font-variant-numeric: tabular-nums; }
 .surface-overlay {
   background-color: rgb(255 255 255 / 0.97);
   backdrop-filter: saturate(1.05);
-  -webkit-backdrop-filter: saturate(1.05);
   border-color: rgb(255 255 255 / 0.7);
   box-shadow: 0 18px 50px -22px rgb(22 22 15 / 0.4);
 }
