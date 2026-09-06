@@ -24,10 +24,32 @@ const SECTION_BACKDROP: Record<string, BackdropName> = {
   orders: "orders",
 };
 
+/**
+ * Read one claim out of a JWT payload without a library. The payload is
+ * base64url, which atob() doesn't accept directly, and any step here can throw
+ * on a malformed or absent token — none of which should white-screen the app.
+ */
+function readTokenClaim(claim: string): unknown {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem("mediflow.token");
+  } catch {
+    return undefined;
+  }
+  if (!raw) return undefined;
+  try {
+    const part = raw.split(".")[1] ?? "";
+    const b64 = part.replace(/-/g, "+").replace(/_/g, "/");
+    const json = atob(b64.padEnd(Math.ceil(b64.length / 4) * 4, "="));
+    return JSON.parse(json)[claim];
+  } catch {
+    return undefined;
+  }
+}
+
 export function AppLayout() {
   const { user, logout } = useAuth();
-  const token = localStorage.getItem("mediflow.token");
-  const isDemo = token ? JSON.parse(atob(token.split(".")[1])).isDemo : false;
+  const isDemo = readTokenClaim("isDemo") === true;
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
