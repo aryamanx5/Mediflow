@@ -53,6 +53,16 @@ const FOCUS: Record<BackdropName, string> = {
   orders: "58% 48%",
 };
 
+/**
+ * A very light, flat wash over the whole photograph. This is NOT a blur and
+ * NOT a fog: at 8% it barely lifts the baseline of the scene so the panels
+ * above start from a fractionally calmer image, without making the room milky
+ * or low-contrast. Every detail — people, shelves, signage, architecture,
+ * colour — is still fully there. The panels do the real local work; this only
+ * takes the hardest edge off the busiest frames.
+ */
+const GLOBAL_WASH = "rgb(252 252 250 / 0.08)";
+
 export function PageBackdrop({ name }: { name: BackdropName }) {
   return (
     <div aria-hidden className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -63,6 +73,7 @@ export function PageBackdrop({ name }: { name: BackdropName }) {
         className="size-full object-cover"
         style={{ objectPosition: FOCUS[name] }}
       />
+      <div className="absolute inset-0" style={{ backgroundColor: GLOBAL_WASH }} />
     </div>
   );
 }

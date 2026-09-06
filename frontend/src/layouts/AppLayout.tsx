@@ -102,8 +102,8 @@ export function AppLayout() {
                     cn(
                       "flex items-center gap-2.5 px-3 h-9 rounded-md text-[0.85rem] transition-colors",
                       isActive
-                        ? "bg-sage-tint text-sage font-medium"
-                        : "text-muted hover:text-ink hover:bg-paper-warm",
+                        ? "nav-active text-sage-deep font-semibold"
+                        : "text-muted hover:text-ink hover:bg-white/15",
                     )
                   }
                 >
@@ -164,13 +164,13 @@ export function AppLayout() {
 
         <main className="grow min-w-0">
           {isDemo && (
-            <div className="bg-amber/15 border-b border-amber/30 px-4 sm:px-7 py-3 flex items-center gap-2 text-amber text-sm">
+            <div className="demo-banner px-4 sm:px-7 py-2.5 flex items-center gap-2 text-warn text-sm font-medium">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                 <circle cx="8" cy="8" r="7.5" stroke="currentColor" strokeWidth="1" />
                 <path d="M8 5v3M8 11h.01" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
               </svg>
               <span>You're viewing the demo account (read-only).</span>
-              <a href="/signin" className="ml-auto font-medium underline underline-offset-2 hover:no-underline">
+              <a href="/signin" className="ml-auto underline underline-offset-2 hover:no-underline">
                 Sign in to your account
               </a>
             </div>
@@ -194,7 +194,7 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <div className="surface surface-panel flex flex-wrap items-end justify-between gap-4 rounded-xl px-5 py-4 mb-5">
+    <div className="surface surface-panel surface-title flex flex-wrap items-end justify-between gap-4 rounded-xl px-5 py-4 mb-5">
       <div>
         <h1 className="u-serif text-[1.75rem] leading-tight">{title}</h1>
         {meta && <p className="u-meta mt-1">{meta}</p>}

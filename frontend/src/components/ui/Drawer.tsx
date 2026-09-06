@@ -37,7 +37,7 @@ export function Drawer({
 
   return (
     <div className="fixed inset-0 z-100 flex justify-end" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0 bg-ink/35 backdrop-blur-[2px] a-fade" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-ink/45 a-fade" onClick={onClose} aria-hidden />
       <div
         ref={panelRef}
         tabIndex={-1}
