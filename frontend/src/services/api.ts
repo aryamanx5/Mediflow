@@ -13,7 +13,6 @@ import type {
   PaymentMethod,
   PaymentStatus,
   Product,
-  Role,
   User,
 } from "./types";
 
@@ -32,7 +31,6 @@ export const auth = {
     name: string;
     email: string;
     password: string;
-    role: Role;
   }) => request<MutationResponse>("/auth/register", { method: "POST", body }),
 
   /** GET /api/auth/demo -> instant token for the shared read-only demo account. */

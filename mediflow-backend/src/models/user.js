@@ -46,7 +46,7 @@ userSchema.pre("save", async function () {
     return;
   }
 
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 12);
 });
 
 // Compare password during login

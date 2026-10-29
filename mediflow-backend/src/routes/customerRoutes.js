@@ -9,17 +9,17 @@ const {
   deleteCustomer,
 } = require("../controllers/customerController");
 
-const { requireAccount } = require("../middleware/authMiddleware");
+const { protect, requireAccount } = require("../middleware/authMiddleware");
 
 
 // Create Customer
 router.post("/", requireAccount, createCustomer);
 
 // Get All Customers
-router.get("/", getAllCustomers);
+router.get("/", protect, getAllCustomers);
 
 // Get Customer By ID
-router.get("/:id", getCustomerById);
+router.get("/:id", protect, getCustomerById);
 
 // Update Customer
 router.put("/:id", requireAccount, updateCustomer);

@@ -9,7 +9,7 @@ import {
 } from "react";
 import { auth as authApi, users } from "../services/api";
 import { getToken, onAuthExpired, setToken } from "../services/client";
-import type { Role, User } from "../services/types";
+import type { User } from "../services/types";
 
 interface AuthValue {
   user: User | null;
@@ -22,7 +22,6 @@ interface AuthValue {
     name: string;
     email: string;
     password: string;
-    role: Role;
   }) => Promise<void>;
   demoLogin: () => Promise<void>;
   logout: () => void;
@@ -94,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const register = useCallback(
-    async (body: { name: string; email: string; password: string; role: Role }) => {
+    async (body: { name: string; email: string; password: string }) => {
       await authApi.register(body);
       // The backend issues no token on register — the caller sends the user
       // to sign in. Deliberately not auto-logging-in behind their back.

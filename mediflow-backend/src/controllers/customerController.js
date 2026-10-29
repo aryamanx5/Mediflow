@@ -1,4 +1,5 @@
 const Customer = require("../models/customer");
+const { escapeRegex } = require("../utils/escapeRegex");
 
 // Create Customer
 const createCustomer = async (req, res) => {
@@ -30,10 +31,11 @@ const getAllCustomers = async (req, res) => {
     const query = {};
 
     if (search) {
+      const pattern = escapeRegex(search);
       query.$or = [
-        { customerName: { $regex: search, $options: "i" } },
-        { customerId: { $regex: search, $options: "i" } },
-        { phone: { $regex: search, $options: "i" } },
+        { customerName: { $regex: pattern, $options: "i" } },
+        { customerId: { $regex: pattern, $options: "i" } },
+        { phone: { $regex: pattern, $options: "i" } },
       ];
     }
 

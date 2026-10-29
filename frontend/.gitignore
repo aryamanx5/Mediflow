@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env files (VITE_ vars are public, but keep local overrides out of git)
+.env
+.env.development

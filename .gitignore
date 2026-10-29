@@ -1,0 +1,16 @@
+# Secrets: never commit real env files (examples are fine)
+.env
+.env.*
+!.env.example
+!frontend/.env.production
+*.pem
+*.key
+
+# Dependencies / builds
+node_modules/
+dist/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

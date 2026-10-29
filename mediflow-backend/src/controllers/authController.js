@@ -17,6 +17,7 @@ const signToken = (user) =>
     },
     process.env.JWT_SECRET,
     {
+      algorithm: "HS256",
       expiresIn: process.env.JWT_EXPIRES_IN,
     }
   );
@@ -24,10 +25,25 @@ const signToken = (user) =>
 // Register User
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
+
+    // Only plain strings reach the database (blocks {"$gt": ""} style injection)
+    if (![name, email, password].every((v) => typeof v === "string" && v.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email and password are required",
+      });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
+    }
 
     // The demo address is reserved
-    if (email && email.toLowerCase() === DEMO_EMAIL) {
+    if (email.toLowerCase() === DEMO_EMAIL) {
       return res.status(400).json({
         success: false,
         message: "That email address is reserved for the demo account",
@@ -35,7 +51,7 @@ const register = async (req, res) => {
     }
 
     // Check if email already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (existingUser) {
       return res.status(400).json({
@@ -44,12 +60,13 @@ const register = async (req, res) => {
       });
     }
 
-    // Create User
+    // Create User. Role is never taken from the request: anyone could
+    // otherwise sign themselves up as Admin. Promote users via an admin.
     const user = await User.create({
       name,
       email,
       password,
-      role,
+      role: "User",
     });
 
     res.status(201).json({
@@ -74,8 +91,15 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
+    if (typeof email !== "string" || typeof password !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
     // Find User
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return res.status(401).json({

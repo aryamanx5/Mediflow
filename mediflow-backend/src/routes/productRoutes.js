@@ -9,26 +9,20 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 
-const { requireAccount } = require("../middleware/authMiddleware");
+const { protect, requireAccount } = require("../middleware/authMiddleware");
 
-
-// Check if this file is being loaded
-console.log("✅ productRoutes loaded");
 
 // Create Product
 router.post("/", requireAccount, createProduct);
 
 // Get All Products
-router.get("/", getAllProducts);
+router.get("/", protect, getAllProducts);
 
 // Get Product By ID
-router.get("/:id", getProductById);
+router.get("/:id", protect, getProductById);
 
 // Update Product
-router.put("/:id", (req, res, next) => {
-  console.log("✅ PUT route hit");
-  next();
-}, requireAccount, updateProduct);
+router.put("/:id", requireAccount, updateProduct);
 
 // Delete Product
 router.delete("/:id", requireAccount, deleteProduct);

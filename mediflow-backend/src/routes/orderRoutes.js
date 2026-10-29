@@ -8,17 +8,17 @@ const {
   cancelOrder,
 } = require("../controllers/orderController");
 
-const { requireAccount } = require("../middleware/authMiddleware");
+const { protect, requireAccount } = require("../middleware/authMiddleware");
 
 
 // Create Order
 router.post("/", requireAccount, createOrder);
 
 // Get All Orders
-router.get("/", getAllOrders);
+router.get("/", protect, getAllOrders);
 
 // Get Order By ID
-router.get("/:id", getOrderById);
+router.get("/:id", protect, getOrderById);
 
 // Cancel Order
 router.put("/cancel/:id", requireAccount, cancelOrder);

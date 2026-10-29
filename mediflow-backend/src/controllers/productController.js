@@ -1,4 +1,5 @@
 const Product = require("../models/product");
+const { escapeRegex } = require("../utils/escapeRegex");
 
 // Create Product
 const createProduct = async (req, res) => {
@@ -33,9 +34,10 @@ const getAllProducts = async (req, res) => {
 
     // Search by Product Name or SKU
     if (search) {
+      const pattern = escapeRegex(search);
       query.$or = [
-        { productName: { $regex: search, $options: "i" } },
-        { sku: { $regex: search, $options: "i" } },
+        { productName: { $regex: pattern, $options: "i" } },
+        { sku: { $regex: pattern, $options: "i" } },
       ];
     }
 

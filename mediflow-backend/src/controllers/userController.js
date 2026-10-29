@@ -1,4 +1,13 @@
 const User = require("../models/user");
+const { escapeRegex } = require("../utils/escapeRegex");
+
+// Copies only the listed keys that are plain strings.
+const pick = (body, keys) =>
+  Object.fromEntries(
+    keys
+      .filter((key) => typeof body?.[key] === "string")
+      .map((key) => [key, body[key]])
+  );
 
 // Get Current User Profile (KAN-17)
 const getProfile = async (req, res) => {
@@ -27,8 +36,8 @@ const getProfile = async (req, res) => {
 // Update Current User Profile (KAN-17)
 const updateProfile = async (req, res) => {
   try {
-    // Prevent password update through this route
-    const { password, role, ...updateData } = req.body;
+    // Only these fields are self-editable (not password, role or isDemo)
+    const updateData = pick(req.body, ["name", "email"]);
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
@@ -72,8 +81,8 @@ const getAllUsers = async (req, res) => {
 
     if (search) {
       query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
+        { name: { $regex: escapeRegex(search), $options: "i" } },
+        { email: { $regex: escapeRegex(search), $options: "i" } },
       ];
     }
 
@@ -127,8 +136,8 @@ const getUserById = async (req, res) => {
 // Update User — Admin only (KAN-18)
 const updateUser = async (req, res) => {
   try {
-    // Prevent password update through this route
-    const { password, ...updateData } = req.body;
+    // Admins can change these; password and isDemo stay off-limits
+    const updateData = pick(req.body, ["name", "email", "role"]);
 
     const user = await User.findByIdAndUpdate(
       req.params.id,

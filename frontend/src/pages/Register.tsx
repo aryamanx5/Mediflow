@@ -1,11 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layouts/AuthLayout";
-import { SelectField, TextField } from "../components/ui/Field";
+import { TextField } from "../components/ui/Field";
 import { Button } from "../components/ui/Button";
 import { useAuth } from "../hooks/useAuth";
 import { ApiError } from "../services/client";
-import type { Role } from "../services/types";
 
 export default function Register() {
   const { register } = useAuth();
@@ -15,7 +14,6 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    role: "User" as Role,
   });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -23,9 +21,9 @@ export default function Register() {
   const set = (key: keyof typeof form) => (v: string) =>
     setForm((f) => ({ ...f, [key]: v }));
 
-  // The backend enforces minlength 6 on the model; catching it here means a
+  // The backend requires at least 8 characters; catching it here means a
   // clear message instead of a raw Mongoose validation string.
-  const passwordTooShort = form.password.length > 0 && form.password.length < 6;
+  const passwordTooShort = form.password.length > 0 && form.password.length < 8;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +35,6 @@ export default function Register() {
         name: form.name.trim(),
         email: form.email.trim(),
         password: form.password,
-        role: form.role,
       });
       // Registration returns no token, so the user signs in next.
       navigate("/signin", {
@@ -82,20 +79,11 @@ export default function Register() {
           type="password"
           required
           autoComplete="new-password"
-          minLength={6}
-          hint="At least 6 characters."
-          error={passwordTooShort ? "Passwords must be at least 6 characters." : undefined}
+          minLength={8}
+          hint="At least 8 characters."
+          error={passwordTooShort ? "Passwords must be at least 8 characters." : undefined}
           value={form.password}
           onChange={(e) => set("password")(e.target.value)}
-        />
-        <SelectField
-          label="Role"
-          value={form.role}
-          onChange={(e) => set("role")(e.target.value)}
-          options={[
-            { value: "User", label: "User — day-to-day operations" },
-            { value: "Admin", label: "Admin — full access" },
-          ]}
         />
 
         {error && (
